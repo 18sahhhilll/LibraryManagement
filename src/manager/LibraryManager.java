@@ -19,12 +19,12 @@ public class LibraryManager {
     try (Connection conn = DBConnection.getConnection();
          PreparedStatement checkStmt = conn.prepareStatement(checkAvailability)) {
 
-        // Check if the book is available
+
         checkStmt.setInt(1, bookId);
         ResultSet rs = checkStmt.executeQuery();
 
         if (rs.next() && rs.getBoolean("available")) {
-            // Book is available, issue it
+        
             try (PreparedStatement insertStmt = conn.prepareStatement(insertHistory);
                  PreparedStatement updateStmt = conn.prepareStatement(updateBook)) {
 
@@ -58,7 +58,7 @@ public void returnBook(int memberId, int bookId) {
          PreparedStatement updateHistoryStmt = conn.prepareStatement(updateHistory);
          PreparedStatement updateBookStmt = conn.prepareStatement(updateBook)) {
 
-        // Update borrow_history with return date
+
         updateHistoryStmt.setDate(1, Date.valueOf(LocalDate.now()));
         updateHistoryStmt.setInt(2, memberId);
         updateHistoryStmt.setInt(3, bookId);
@@ -66,7 +66,7 @@ public void returnBook(int memberId, int bookId) {
         int rowsUpdated = updateHistoryStmt.executeUpdate();
 
         if (rowsUpdated > 0) {
-            // Mark book as available
+
             updateBookStmt.setInt(1, bookId);
             updateBookStmt.executeUpdate();
 
@@ -145,11 +145,11 @@ public void deleteBook(int bookId) {
          PreparedStatement historyStmt = conn.prepareStatement(deleteHistory);
          PreparedStatement bookStmt = conn.prepareStatement(deleteBook)) {
 
-        // Step 1: Delete borrow history related to the book
+        
         historyStmt.setInt(1, bookId);
         historyStmt.executeUpdate();
 
-        // Step 2: Delete the book itself
+       
         bookStmt.setInt(1, bookId);
         int rowsDeleted = bookStmt.executeUpdate();
 
@@ -174,11 +174,11 @@ public void deleteMember(int memberId) {
          PreparedStatement historyStmt = conn.prepareStatement(deleteHistory);
          PreparedStatement memberStmt = conn.prepareStatement(deleteMember)) {
 
-        // Step 1: Delete borrow history for the member
+
         historyStmt.setInt(1, memberId);
         historyStmt.executeUpdate();
 
-        // Step 2: Delete the member record
+
         memberStmt.setInt(1, memberId);
         int rowsDeleted = memberStmt.executeUpdate();
 
@@ -199,8 +199,7 @@ public void deleteMember(int memberId) {
     try (Connection conn = DBConnection.getConnection();
          PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-        pstmt.setString(1, "%" + titleKeyword + "%"); // allows partial matches
-
+        pstmt.setString(1, "%" + titleKeyword + "%"); 
         ResultSet rs = pstmt.executeQuery();
 
         System.out.println("\n🔍 Search Results for: " + titleKeyword);
